@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="TRSK QuickCalc — free percentage and discount calculator.">
+<title>TRSK QuickCalc | Free Percentage & Discount Calculator</title>
+<style>
+:root{--ink:#17191f;--muted:#69707d;--line:#e7e9ee;--bg:#f7f8fa;--accent:#2457e6;--accent2:#eaf0ff;--good:#087a4b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:#fff;border-bottom:1px solid var(--line);padding:18px 20px}
+.wrap{width:min(920px,100%);margin:auto}
+.brand{font-weight:850;font-size:25px;letter-spacing:-1.2px}.brand span{color:var(--accent)}
+.tag{color:var(--muted);font-size:13px;margin-top:3px}
+main{padding:30px 16px 50px}
+.intro{text-align:center;margin:4px auto 26px;max-width:620px}
+h1{font-size:clamp(28px,6vw,42px);letter-spacing:-1.5px;margin:0 0 8px}
+.intro p{color:var(--muted);line-height:1.6;margin:0}
+.tabs{display:flex;gap:8px;justify-content:center;margin:22px 0;flex-wrap:wrap}
+.tab{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:11px 17px;font-weight:700;cursor:pointer}
+.tab.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 8px 28px #17213a0a}
+.panel h2{font-size:20px;margin:0 0 5px}.sub{color:var(--muted);font-size:13px;margin:0 0 20px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
+input{width:100%;padding:14px 13px;border:1px solid #d9dde5;border-radius:11px;font-size:17px;outline:none;background:#fff;color:var(--ink)}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #2457e61a}
+.actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+button{font:inherit}
+.primary,.secondary{border:0;border-radius:11px;padding:13px 17px;font-weight:750;cursor:pointer}
+.primary{background:var(--accent);color:#fff;flex:1}.secondary{background:#f0f2f6;color:var(--ink)}
+.result{margin-top:20px;background:var(--accent2);border:1px solid #d8e3ff;border-radius:15px;padding:17px;display:none}
+.result.show{display:block}
+.result .kicker{font-size:12px;font-weight:800;color:#425a9c;text-transform:uppercase;letter-spacing:.6px}
+.big{font-size:clamp(28px,6vw,36px);font-weight:850;letter-spacing:-1px;margin:4px 0;color:#173fae;overflow-wrap:anywhere}
+.detail{font-size:14px;color:#3f4c68;line-height:1.6}
+.error{color:#b42318;font-size:13px;margin-top:10px;min-height:18px}
+.hidden{display:none}
+.note{color:var(--muted);font-size:12px;line-height:1.6;text-align:center;margin:20px auto 0;max-width:600px}
+footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
+@media(max-width:560px){main{padding:23px 13px 38px}.panel{padding:17px}.grid{grid-template-columns:1fr}.tabs{margin:18px 0}.tab{flex:1;padding:11px 9px;font-size:13px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="brand">TRSK<span>.</span></div><div class="tag">Explore. Learn. Grow.</div></div></header>
+<main class="wrap">
+<section class="intro">
+<h1>QuickCalc</h1>
+<p>Fast, simple and free calculators for everyday life. No sign-up needed.</p>
+</section>
+<div class="tabs" role="tablist" aria-label="Calculator type">
+<button class="tab active" id="pctTab" type="button" role="tab" aria-selected="true">Percentage</button>
+<button class="tab" id="discTab" type="button" role="tab" aria-selected="false">Discount</button>
+</div>
+<section class="panel" id="pctPanel">
+<h2>Percentage Calculator</h2><p class="sub">Find a percentage of any number.</p>
+<div class="grid">
+<div><label for="pct">Percentage (%)</label><input id="pct" type="number" inputmode="decimal" placeholder="e.g. 15" step="any"></div>
+<div><label for="base">Number</label><input id="base" type="number" inputmode="decimal" placeholder="e.g. 200" step="any"></div>
+</div>
+<div class="actions"><button class="primary" id="calcPct">Calculate</button><button class="secondary" id="clearPct">Clear</button></div>
+<div class="error" id="pctError" aria-live="polite"></div>
+<div class="result" id="pctResult" aria-live="polite"><div class="kicker">Result</div><div class="big" id="pctValue"></div><div class="detail" id="pctDetail"></div></div>
+</section>
+<section class="panel hidden" id="discPanel">
+<h2>Discount Calculator</h2><p class="sub">Calculate the amount saved and final sale price.</p>
+<div class="grid">
+<div><label for="price">Original price</label><input id="price" type="number" inputmode="decimal" placeholder="e.g. 1500" min="0" step="any"></div>
+<div><label for="discount">Discount (%)</label><input id="discount" type="number" inputmode="decimal" placeholder="e.g. 20" min="0" max="100" step="any"></div>
+</div>
+<div class="actions"><button class="primary" id="calcDisc">Calculate</button><button class="secondary" id="clearDisc">Clear</button></div>
+<div class="error" id="discError" aria-live="polite"></div>
+<div class="result" id="discResult" aria-live="polite"><div class="kicker">You pay</div><div class="big" id="finalPrice"></div><div class="detail" id="discDetail"></div></div>
+</section>
+<p class="note">TRSK QuickCalc is a free utility. Calculations happen on your device; no values are sent to a server.</p>
+</main>
+<footer>© <span id="year"></span> TRSK. All rights reserved.</footer>
+<script>
+const $=id=>document.getElementById(id);
+const fmt=n=>new Intl.NumberFormat(undefined,{maximumFractionDigits:2}).format(n);
+function showTab(which){
+ const pct=which==='pct';
+ $('pctPanel').classList.toggle('hidden',!pct);$('discPanel').classList.toggle('hidden',pct);
+ $('pctTab').classList.toggle('active',pct);$('discTab').classList.toggle('active',!pct);
+ $('pctTab').setAttribute('aria-selected',String(pct));$('discTab').setAttribute('aria-selected',String(!pct));
+}
+$('pctTab').addEventListener('click',()=>showTab('pct'));
+$('discTab').addEventListener('click',()=>showTab('disc'));
+$('calcPct').addEventListener('click',()=>{
+ const p=Number($('pct').value),n=Number($('base').value);
+ $('pctError').textContent='';
+ if($('pct').value.trim()===''||$('base').value.trim()===''||!Number.isFinite(p)||!Number.isFinite(n)){ $('pctError').textContent='Please enter valid numbers in both fields.';return; }
+ const answer=p*n/100;
+ $('pctValue').textContent=fmt(answer);
+ $('pctDetail').textContent=`${fmt(p)}% of ${fmt(n)} = ${fmt(answer)}`;
+ $('pctResult').classList.add('show');
+});
+$('clearPct').addEventListener('click',()=>{['pct','base'].forEach(id=>$(id).value='');$('pctError').textContent='';$('pctResult').classList.remove('show')});
+$('calcDisc').addEventListener('click',()=>{
+ const price=Number($('price').value),d=Number($('discount').value);
+ $('discError').textContent='';
+ if($('price').value.trim()===''||$('discount').value.trim()===''||!Number.isFinite(price)||!Number.isFinite(d)||price<0||d<0||d>100){$('discError').textContent='Enter a valid price and a discount between 0 and 100.';return;}
+ const saved=price*d/100,final=price-saved;
+ $('finalPrice').textContent=fmt(final);
+ $('discDetail').textContent=`You save ${fmt(saved)} (${fmt(d)}% off the original price of ${fmt(price)}).`;
+ $('discResult').classList.add('show');
+});
+$('clearDisc').addEventListener('click',()=>{['price','discount'].forEach(id=>$(id).value='');$('discError').textContent='';$('discResult').classList.remove('show')});
+$('year').textContent=new Date().getFullYear();
+</script>
+</body>
+</html>
